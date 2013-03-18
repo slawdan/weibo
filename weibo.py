@@ -109,6 +109,11 @@ class Client(object):
         Request resource by post method.
         """
         url = "%s%s.json" % (self.api_url, uri)
-        res = json.loads(self.session.post(url, data=kwargs).text)
+        pic = kwargs.pop('pic', None)
+        res = json.loads(self.session.post(
+            url, 
+            data=kwargs, 
+            files={'pic': pic} if pic else None
+            ).text)
         self._assert_error(res)
         return res
