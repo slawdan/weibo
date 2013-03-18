@@ -107,6 +107,27 @@ class Client(object):
     def post(self, uri, **kwargs):
         """
         Request resource by post method.
+        If there is a 'pic' field, it accept a string, a list/tuple, or a
+        file-like object as value. 
+        If the value is 
+            a string: requests will use 'pic' as file name
+            a file-like object: requests will use the file's name
+            a list/tuple: request will use the tuple[0] as file name,
+                          tuple[1] as file content string/file-like object,
+                          tuple[2] as mime type
+        Examples:
+            client.post('status/upload', pic='content of a pic')
+            client.post('status/upload', pic=open('foo.jpg', 'r'))
+            client.post('status/upload', pic=('foo.jpg', 'pic content'))
+            client.post('status/upload', pic=('foo.jpg', open('foo.jpg', 'r')))
+            client.post(
+                'status/upload', 
+                pic=('foo.jpg', 'pic content', 'image/jpeg')
+                )
+            client.post(
+                'status/upload', 
+                pic=('foo.jpg', open('foo.jpg', 'r'), 'image/jpeg')
+                )
         """
         url = "%s%s.json" % (self.api_url, uri)
         pic = kwargs.pop('pic', None)
